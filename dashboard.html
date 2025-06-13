@@ -109,6 +109,9 @@
       flex-wrap: wrap;
       gap: 8px;
     }
+    #galleryContainer {
+      margin-top: 10px;
+    }
     .photo-item {
       position: relative;
       border-radius: 8px;
@@ -151,10 +154,12 @@
   </div>
 
   <div class="section">
-    <h2>🖼️ Upload & View Photos</h2>
-    <input type="file" id="photoInput" accept="image/*" multiple />
-    <button onclick="uploadPhotos()">Upload</button>
-    <div id="gallery"></div>
+    <h2 onclick="toggleGallery()" style="cursor:pointer;">🖼️ Upload & View Photos <span id="galleryToggle">▶</span></h2>
+    <div id="galleryContainer" style="display:none;">
+      <input type="file" id="photoInput" accept="image/*" multiple />
+      <button onclick="uploadPhotos()">Upload</button>
+      <div id="gallery"></div>
+    </div>
   </div>
 
   <div class="section">
@@ -303,6 +308,14 @@
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ fileName })
       }).then(() => loadGallery());
+    }
+
+    function toggleGallery() {
+      const cont = document.getElementById('galleryContainer');
+      const icon = document.getElementById('galleryToggle');
+      const hidden = cont.style.display === 'none';
+      cont.style.display = hidden ? 'block' : 'none';
+      icon.textContent = hidden ? '▼' : '▶';
     }
 
     loadGallery();
