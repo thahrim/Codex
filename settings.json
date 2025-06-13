@@ -1,0 +1,6 @@
+{
+  "showQR": true,
+  "qrPosition": "top-right",
+  "reminderPosition": "bottom",
+  "reminderSize": "large"
+}

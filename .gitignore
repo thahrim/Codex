@@ -1,0 +1,6 @@
+# Ignore Electron binaries and build output
+node_modules/
+dist/
+*.exe
+*.zip
+*.log
