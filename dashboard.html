@@ -31,6 +31,37 @@
       align-items: center;
       gap: 8px;
     }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-group label {
+      font-weight: bold;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .form-group.inline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .reminder-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .reminder-item input[type="text"] {
+      flex: 1;
+      margin: 0;
+    }
+    .reminder-item button {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
     input[type="text"],
     select,
     input[type="file"] {
@@ -109,7 +140,7 @@
   <div class="section">
     <h2>🧠 Reminders</h2>
     <form id="remindersForm">
-      <div id="reminderList"></div>
+      <div class="form-group" id="reminderList"></div>
       <button type="button" onclick="addReminder()">+ Add Reminder</button>
       <button type="submit">Save Reminders</button>
       <p id="reminderStatus"></p>
@@ -119,32 +150,40 @@
   <div class="section">
     <h2>📲 QR Settings</h2>
     <form id="settingsForm">
-      <label><input type="checkbox" id="showQR"> Show QR on Slideshow</label>
-      <label>QR Position:
+      <div class="form-group inline">
+        <input type="checkbox" id="showQR" />
+        <label for="showQR">Show QR on Slideshow</label>
+      </div>
+      <div class="form-group">
+        <label for="qrPosition">QR Position:</label>
         <select id="qrPosition">
           <option value="top-left">Top Left</option>
           <option value="top-right">Top Right</option>
           <option value="bottom-left">Bottom Left</option>
           <option value="bottom-right">Bottom Right</option>
         </select>
-      </label>
-      
-      <label>Reminder Position:
+      </div>
+      <div class="form-group">
+        <label for="reminderPosition">Reminder Position:</label>
         <select id="reminderPosition">
           <option value="top">Top</option>
           <option value="center">Center</option>
           <option value="bottom">Bottom</option>
         </select>
-      </label>
-      <label>Reminder Size:
+      </div>
+      <div class="form-group">
+        <label for="reminderSize">Reminder Size:</label>
         <select id="reminderSize">
           <option value="small">Small</option>
           <option value="medium">Medium</option>
           <option value="large">Large</option>
           <option value="custom">Custom</option>
         </select>
-      </label>
-      <input type="text" id="customSize" placeholder="Enter custom size (e.g. 32px)" style="display:none;" />
+      </div>
+      <div class="form-group" id="customSizeGroup" style="display:none;">
+        <label for="customSize">Custom Size:</label>
+        <input type="text" id="customSize" placeholder="Enter custom size (e.g. 32px)" />
+      </div>
 
       <button type="submit">Save Settings</button>
       <p id="saveStatus"></p>
@@ -156,7 +195,15 @@
       document.getElementById('showQR').checked = !!data.showQR;
       document.getElementById('qrPosition').value = data.qrPosition || 'bottom-right';
       document.getElementById('reminderPosition').value = data.reminderPosition || 'bottom';
-      document.getElementById('reminderSize').value = data.reminderSize || 'medium';
+
+      const sizeOptions = ['small','medium','large'];
+      if (sizeOptions.includes(data.reminderSize)) {
+        document.getElementById('reminderSize').value = data.reminderSize;
+      } else {
+        document.getElementById('reminderSize').value = 'custom';
+        document.getElementById('customSize').value = data.reminderSize || '';
+      }
+      updateCustomVisibility();
     });
 
     document.getElementById('settingsForm').addEventListener('submit', function(e) {
@@ -174,7 +221,16 @@
 
     function addReminder(text = "") {
       const div = document.createElement('div');
-      div.innerHTML = '<input type="text" value="' + text + '" /><button onclick="this.parentElement.remove()">×</button>';
+      div.className = 'reminder-item';
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = text;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = '×';
+      btn.onclick = () => div.remove();
+      div.appendChild(input);
+      div.appendChild(btn);
       document.getElementById('reminderList').appendChild(div);
     }
 
@@ -236,8 +292,10 @@
 
 <script>
   const sizeDropdown = document.getElementById('reminderSize');
-  const customInput = document.getElementById('customSize');
-  sizeDropdown.addEventListener('change', () => {
-    customInput.style.display = sizeDropdown.value === 'custom' ? 'block' : 'none';
-  });
+  const customGroup = document.getElementById('customSizeGroup');
+  function updateCustomVisibility() {
+    customGroup.style.display = sizeDropdown.value === 'custom' ? 'block' : 'none';
+  }
+  sizeDropdown.addEventListener('change', updateCustomVisibility);
+  updateCustomVisibility();
 </script>
