@@ -69,13 +69,18 @@
     .reminder-item input[type="text"] {
       flex: 1;
       margin: 0;
+      padding: 14px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      border: 2px solid #ccc;
     }
     .reminder-item button {
       background: var(--delete-bg);
       color: #fff;
       border: none;
-      padding: 4px 8px;
-      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.9rem;
+      border-radius: 50%;
       cursor: pointer;
     }
     input[type="text"],
@@ -250,6 +255,7 @@
       div.className = 'reminder-item';
       const input = document.createElement('input');
       input.type = 'text';
+      input.placeholder = 'Enter reminder';
       input.value = text;
       const btn = document.createElement('button');
       btn.type = 'button';
