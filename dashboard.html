@@ -5,9 +5,25 @@
   <title>Parcina Display Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --bg-color: #f2f4f8;
+      --section-bg: #fff;
+      --text-color: #222;
+      --shadow-color: rgba(0,0,0,0.05);
+      --button-bg: #4a90e2;
+      --button-hover-bg: #357ab8;
+      --delete-bg: #e74c3c;
+    }
+    body.dark {
+      --bg-color: #1e1e1e;
+      --section-bg: #2c2c2c;
+      --text-color: #f5f5f5;
+      --shadow-color: rgba(0,0,0,0.4);
+    }
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f2f4f8;
+      background: var(--bg-color);
+      color: var(--text-color);
       padding: 20px;
       max-width: 800px;
       margin: auto;
@@ -15,14 +31,14 @@
     h1 {
       text-align: center;
       margin-bottom: 20px;
-      color: #222;
+      color: var(--text-color);
     }
     .section {
-      background: #fff;
+      background: var(--section-bg);
       padding: 20px;
       margin-top: 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 10px var(--shadow-color);
     }
     h2 {
       font-size: 1.3rem;
@@ -55,7 +71,7 @@
       margin: 0;
     }
     .reminder-item button {
-      background: #e74c3c;
+      background: var(--delete-bg);
       color: #fff;
       border: none;
       padding: 4px 8px;
@@ -78,7 +94,7 @@
       padding: 10px;
       margin-top: 5px;
       font-size: 1rem;
-      background: #4a90e2;
+      background: var(--button-bg);
       color: white;
       border: none;
       border-radius: 8px;
@@ -86,7 +102,7 @@
       transition: background 0.2s ease;
     }
     button:hover {
-      background: #357ab8;
+      background: var(--button-hover-bg);
     }
     #gallery {
       display: flex;
@@ -97,7 +113,7 @@
       position: relative;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px var(--shadow-color);
       transition: transform 0.2s ease;
     }
     .photo-item:hover {
@@ -129,6 +145,10 @@
 </head>
 <body>
   <h1>📸 Parcina Display Dashboard</h1>
+  <div class="form-group inline" style="justify-content:flex-end; margin-bottom:10px;">
+    <label for="themeToggle">Dark Mode</label>
+    <input type="checkbox" id="themeToggle" />
+  </div>
 
   <div class="section">
     <h2>🖼️ Upload & View Photos</h2>
@@ -298,4 +318,18 @@
   }
   sizeDropdown.addEventListener('change', updateCustomVisibility);
   updateCustomVisibility();
+
+  const themeToggle = document.getElementById('themeToggle');
+  function applyTheme(t) {
+    document.body.classList.toggle('dark', t === 'dark');
+    themeToggle.checked = t === 'dark';
+  }
+  const stored = localStorage.getItem('theme');
+  const systemPref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  applyTheme(stored || systemPref);
+  themeToggle.addEventListener('change', () => {
+    const newTheme = themeToggle.checked ? 'dark' : 'light';
+    localStorage.setItem('theme', newTheme);
+    applyTheme(newTheme);
+  });
 </script>
