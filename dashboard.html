@@ -214,8 +214,8 @@
         </select>
       </div>
       <div class="form-group" id="customSizeGroup" style="display:none;">
-        <label for="customSize">Custom Size:</label>
-        <input type="text" id="customSize" placeholder="Enter custom size (e.g. 32px)" />
+        <label for="customSize">Custom Size: <span id="customSizeValue"></span>px</label>
+        <input type="range" id="customSize" min="16" max="100" value="32" />
       </div>
 
       <button type="submit">Save Settings</button>
@@ -234,7 +234,9 @@
         document.getElementById('reminderSize').value = data.reminderSize;
       } else {
         document.getElementById('reminderSize').value = 'custom';
-        document.getElementById('customSize').value = data.reminderSize || '';
+        const customValue = parseInt(data.reminderSize, 10) || 32;
+        document.getElementById('customSize').value = customValue;
+        document.getElementById('customSizeValue').innerText = customValue;
       }
       updateCustomVisibility();
     });
@@ -246,7 +248,7 @@
       fetch('/settings', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: new URLSearchParams({ showQR, qrPosition, reminderPosition: document.getElementById('reminderPosition').value, reminderSize: document.getElementById('reminderSize').value, customSize: document.getElementById('customSize').value })
+        body: new URLSearchParams({ showQR, qrPosition, reminderPosition: document.getElementById('reminderPosition').value, reminderSize: document.getElementById('reminderSize').value, customSize: document.getElementById('customSize').value + 'px' })
       }).then(res => res.json()).then(data => {
         document.getElementById('saveStatus').innerText = data.success ? "✅ Saved" : "❌ Failed";
       });
@@ -335,11 +337,19 @@
 <script>
   const sizeDropdown = document.getElementById('reminderSize');
   const customGroup = document.getElementById('customSizeGroup');
+  const customSlider = document.getElementById('customSize');
+  const customSizeValue = document.getElementById('customSizeValue');
   function updateCustomVisibility() {
     customGroup.style.display = sizeDropdown.value === 'custom' ? 'block' : 'none';
   }
   sizeDropdown.addEventListener('change', updateCustomVisibility);
   updateCustomVisibility();
+
+  function updateCustomDisplay() {
+    customSizeValue.innerText = customSlider.value;
+  }
+  customSlider.addEventListener('input', updateCustomDisplay);
+  updateCustomDisplay();
 
   const themeToggle = document.getElementById('themeToggle');
   function applyTheme(t) {
