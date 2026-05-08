@@ -4,7 +4,9 @@
   "description": "Slideshow and reminder display for Parcina",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "start:web": "node server.js",
+    "build:win": "electron-packager . parcina-slideshow --platform=win32 --arch=x64 --out=dist --overwrite --icon=icon.ico"
   },
   "devDependencies": {
     "electron": "^36.4.0",
