@@ -15,12 +15,12 @@ function createWindow () {
     frame: false,
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      nodeIntegration: false,
+      contextIsolation: true
     }
   });
 
-  win.loadFile('index.html');
+  win.loadURL('http://localhost:8080/');
 }
 
 app.whenReady().then(createWindow);
